@@ -1,0 +1,22 @@
+<html>
+<body>
+
+<br>Object Configurationframework.</br>
+<br>Purpose: No any parser should be existing, we are using Spring-IoC currently.
+</br>
+
+Usage Example: 
+try
+		{			
+			//single configuration file
+			YourClass instance = (YourClass)Configurator.getObject("throttling.xml", "throttling_manager");
+			//multiple configuration file
+			YourClass instance2 = (YourClass)Configurator.getObject(new String[]{"throttling.xml", "throttling2.xml"}, "throttling_manager");
+		
+		}
+		catch(ConfigurationException e)
+		{
+			logger.fatal(e, e);
+		}
+</body>
+</html>

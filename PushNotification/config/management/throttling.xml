@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN/EN" 
+    "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans>
+   <bean id="throttling_manager" class="com.telenav.cserver.framework.throttling.ThrottlingConfiguration">
+        <property name="enabled">
+            <value>true</value>
+        </property>
+        <property name="serviceList">
+            <list>
+	       <ref bean="FeedbackService" />
+		   <ref bean="RecentStopService" />
+		   <ref bean="FavoriteService" />
+		   <ref bean="TelepersonalizationService"/>
+		   <ref bean="GuideToneService"/>
+		   <ref bean="default"/>
+    	    </list>
+        </property>
+        
+   </bean>
+   
+    <bean id="TelepersonalizationService"
+         class="com.telenav.cserver.framework.throttling.Service">
+		 
+        <property name="maxAllowedOnlineNumber">
+            <value>300</value>
+        </property>
+        <property name="serviceTypes">
+            <value>TELEPERSONALIZATION_SERVICE</value>
+        </property>
+   </bean>
+   
+      <bean id="FavoriteService"
+         class="com.telenav.cserver.framework.throttling.Service">
+		 
+        <property name="maxAllowedOnlineNumber">
+            <value>300</value>
+        </property>
+        <property name="serviceTypes">
+            <value>FAVORITESERVER</value>
+        </property>
+   </bean>
+   
+   <bean id="FeedbackService"
+         class="com.telenav.cserver.framework.throttling.Service">
+		 
+        <property name="maxAllowedOnlineNumber">
+            <value>300</value>
+        </property>
+        <property name="serviceTypes">
+            <value>FEEDBACKSERVER</value>
+        </property>
+   </bean>
+   
+   <bean id="RecentStopService"
+         class="com.telenav.cserver.framework.throttling.Service">
+		 
+        <property name="maxAllowedOnlineNumber">
+            <value>300</value>
+        </property>
+        <property name="serviceTypes">
+            <value>RECENTSTOPSERVER</value>
+        </property>
+   </bean>
+   
+   <bean id="GuideToneService"
+         class="com.telenav.cserver.framework.throttling.Service">
+		 
+        <property name="maxAllowedOnlineNumber">
+            <value>300</value>
+        </property>
+        <property name="serviceTypes">
+            <value>GUIDETONE_SERVICE</value>
+        </property>
+   </bean>
+   <bean id="default"
+         class="com.telenav.cserver.framework.throttling.Service">
+		 
+        <property name="maxAllowedOnlineNumber">
+            <value>300</value>
+        </property>
+        <property name="serviceTypes">
+            <value>default_service</value>
+        </property>
+   </bean>
+</beans>

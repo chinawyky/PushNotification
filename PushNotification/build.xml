@@ -1,0 +1,113 @@
+<!DOCTYPE project [
+  <!ENTITY base_ant_common     SYSTEM "base_ant_common.properties">
+]>
+<project name="Alonzo" default="war"
+	xmlns:ivy="antlib:org.apache.ivy.ant">
+	<taskdef resource="antenna.properties" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+	<!-- default build parameters -->
+	<property name="project" value="PushNotification" />
+	<property name="version" value="x.x.x" />
+	<property name="base.dir" value="." />	
+	<property name="src.dir" value="./src" />
+	<property name="config.dir" value="./config" />
+	<property name="lib.dir" value="./WebRoot/WEB-INF/lib" />
+	<property name="app_path" value="./webapps" />
+	<property name="web.root" value="./WebRoot" />
+	<property name="temp.dir" value="./temp" />
+	<property name="build.dir" value="./build" />
+	<property name="output.dir" value="./dist" />
+	<property name="package" value="com/telenav/" />
+	<property name="webinif.dir" value="WEB-INF" />
+	<property name="web_classes.dir" value="${webinif.dir}/classes" />
+	<property name="origin.lib.dir" value="./lib" />
+	
+	
+	<target name="makelib"  description="">
+			<!-- define our classpath -->
+			<path id="lib.class.path">
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar"/>
+				</fileset>
+			</path>
+	</target>
+
+	<target name="clean">
+		<delete dir="${lib.dir}" />
+		<delete dir="${temp.dir}" />
+		<delete dir="${output.dir}/${suffix}_${region}" />
+	</target>
+
+	<target name="create dir" depends="clean">
+		<mkdir dir="${lib.dir}" />
+		<mkdir dir="${temp.dir}" />
+		<mkdir dir="${output.dir}/${suffix}_${region}" />
+	</target>
+
+	<target name="copy_jar_resources" depends="create dir">
+
+		<copy todir="${lib.dir}" flatten="true">
+			<fileset dir="${origin.lib.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${temp.dir}">
+			<fileset dir="${web.root}">
+				<exclude name="**/.svn/**" />
+				<exclude name="**/classes/**" />
+				<exclude name="WEB-INF/config/**" />
+			</fileset>
+		</copy>
+
+	</target>
+
+	<target name="compile" depends="makelib, copy_jar_resources">
+
+		<mkdir dir="${temp.dir}/${webinif.dir}/classes" />
+
+		<javac srcdir="${src.dir}" destdir="${temp.dir}/${webinif.dir}/classes" fork="yes" debug="on" deprecation="on">
+			<classpath refid="lib.class.path" />
+		</javac>
+
+		<echo>build:${suffix}_${region}</echo>
+		
+		<!-- Copy config file for Gateway filter -->
+		<copy file="${base.dir}/version.txt" todir="${temp.dir}/${webinif.dir}/classes/" />
+		
+		<copy todir="${temp.dir}/${webinif.dir}/classes/">
+			<fileset dir="${config.dir}/${suffix}_${region}">
+				<include name="**/**"/>
+			</fileset>
+		</copy>
+	
+		<copy todir="${temp.dir}/${webinif.dir}/classes/management/">
+			<fileset dir="${config.dir}/management">
+				<include name="*.*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+
+	<target name="copy_config_and_exclude_asset" depends="compile">
+		<copy todir="${temp.dir}/${web_classes.dir}/${package}">
+			<fileset dir="${src.dir}/${package}">
+				<include name="**/config/**" />
+				<include name="**/*.xml" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</copy>
+		<delete file="${temp.dir}/${webinif.dir}/lib/jsp-api-2.0.jar"/>
+		<delete file="${lib.dir}/jsp-api-2.0.jar"/>
+		<delete file="${temp.dir}/${webinif.dir}/lib/servlet-2.2x.jar"/>
+		<delete file="${lib.dir}/servlet-2.2x.jar"/>
+	</target>
+
+	<target name="war" depends="copy_config_and_exclude_asset">
+
+		<jar destfile="${output.dir}/${suffix}_${region}/${project}.war" basedir="${temp.dir}" />
+		<delete dir="${temp.dir}"/> 
+	</target>
+
+
+</project>

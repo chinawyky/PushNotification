@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<!--**********************************************************************-->
+	<!-- All the APPENDERS -->
+	<!--**********************************************************************-->
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p %m - %c{2} %d%n"/>
+		</layout>
+	</appender>
+	
+	<appender name="SysFile" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/home/tnuser/logs/TeleNav60/PushNotification.log"/>
+		<param name="DatePattern" value="'.'yyyy-MM-dd"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%t] %-5p %c{2} - %m%n"/>
+		</layout>
+	</appender>
+
+	<logger name="com.telenav.cserver"> 
+	   <level value="debug" />
+	   <appender-ref ref="SysFile" />
+	</logger>
+	<logger name="org.springframework"> 
+	   <level value="info" />
+	   <appender-ref ref="SysFile" />
+	</logger>
+	<logger name="httpclient">
+       <level value="fatal" />
+       <appender-ref ref="SysFile" />
+    </logger>
+    <logger name="org">
+       <level value="fatal" />
+       <appender-ref ref="SysFile" />
+    </logger>
+	<root>
+		<level value="info" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</log4j:configuration>
