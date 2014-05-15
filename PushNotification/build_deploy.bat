@@ -1,1 +1,0 @@
-ant war  -propertyfile=deploy_us.properties
